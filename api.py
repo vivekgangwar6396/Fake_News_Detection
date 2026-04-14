@@ -2,44 +2,24 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
-import logging
-from fastapi.middleware.cors import CORSMiddleware
 
-# ================= INIT =================
-app = FastAPI(title="Fake News Detection API")
+app = FastAPI()
 
-# Enable CORS (important for frontend)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Logging
-logging.basicConfig(level=logging.INFO)
-
-# ================= LOAD MODEL =================
-try:
-   tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+# ✅ Load model from HuggingFace (NO bert_model folder needed)
+tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 model = BertForSequenceClassification.from_pretrained("bert-base-uncased")
-   model.eval()
-    logging.info("✅ Model loaded successfully")
-except Exception as e:
-    logging.error(f"❌ Model loading failed: {e}")
-    raise e
+model.eval()
 
-# ================= REQUEST SCHEMA =================
+# Request schema
 class NewsRequest(BaseModel):
     text: str
 
-# ================= HEALTH CHECK =================
+# Health check
 @app.get("/")
-def health_check():
-    return {"status": "API is running 🚀"}
+def home():
+    return {"message": "API is running 🚀"}
 
-# ================= PREDICTION =================
+# Prediction function
 def predict(text: str):
     try:
         inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
@@ -55,15 +35,14 @@ def predict(text: str):
 
         return {
             "label": label,
-            "confidence": round(conf, 3),
-            "status": "success"
+            "confidence": round(conf, 2)
         }
 
     except Exception as e:
-        logging.error(f"Prediction error: {e}")
-        raise HTTPException(status_code=500, detail="Prediction failed")
+        raise HTTPException(status_code=500, detail=str(e))
 
-# ================= API ENDPOINT =================
+
+# API endpoint
 @app.post("/predict")
 def predict_news(req: NewsRequest):
     if not req.text.strip():
