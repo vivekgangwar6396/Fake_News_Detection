@@ -1,0 +1,14 @@
+venv310\Scripts\activate
+
+uvicorn api:app --reload
+
+
+http://127.0.0.1:8000/docs
+
+
+{
+  "text": "Stock market hits all-time high"
+}
+
+
+streamlit run app.py

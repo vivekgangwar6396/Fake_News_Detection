@@ -1,0 +1,9 @@
+streamlit
+fastapi
+uvicorn
+transformers
+torch
+requests
+pandas
+nltk
+python-dotenv

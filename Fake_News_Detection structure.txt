@@ -1,0 +1,7 @@
+Fake_News_Detection/
+│
+├── app.py
+├── bert_model/
+├── model.pkl (optional comparison)
+├── vectorizer.pkl
+└── assets/

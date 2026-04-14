@@ -1,0 +1,6 @@
+venv310/
+bert_model/
+__pycache__/
+*.pyc
+model.pkl
+vectorizer.pkl
