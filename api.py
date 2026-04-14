@@ -22,9 +22,9 @@ logging.basicConfig(level=logging.INFO)
 
 # ================= LOAD MODEL =================
 try:
-    tokenizer = BertTokenizer.from_pretrained("bert_model")
-    model = BertForSequenceClassification.from_pretrained("bert_model")
-    model.eval()
+   tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+model = BertForSequenceClassification.from_pretrained("bert-base-uncased")
+   model.eval()
     logging.info("✅ Model loaded successfully")
 except Exception as e:
     logging.error(f"❌ Model loading failed: {e}")
